@@ -7,3 +7,9 @@ poetry install
 poetry shell
 python -m src.aa
 ```
+### How to use Selenium Grid
+```commandline
+docker-compose up -d
+```
+
+Set `use_grid` parameter to `True` to configure remote web drivers.
