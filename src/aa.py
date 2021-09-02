@@ -97,5 +97,5 @@ class AACrawler(BaseCralwer):
 
 
 if __name__ == "__main__":
-    crawler = AACrawler()
+    crawler = AACrawler(use_grid=False)
     crawler.start()

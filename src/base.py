@@ -11,26 +11,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from src.exceptions import PlatformNotSupported
 
 
+def get_chromeoptions():
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-infobars")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-browser-side-navigation")
+    options.add_argument("--disable-features=VizDisplayCompositor")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--force-device-scale-factor=1")
+    options.add_argument("--disable-backgrounding-occluded-windows")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--start-maximized")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--allow-running-insecure-content")
+    options.add_argument("--log-level=3")
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    return options
+
+
 class Browser(webdriver.Chrome):
     def __init__(self, executable_path="chromedriver"):
         self.display = Display(visible=False)
         self.display.start()
-
-        options = webdriver.ChromeOptions()
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-infobars")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--disable-browser-side-navigation")
-        options.add_argument("--disable-features=VizDisplayCompositor")
-        options.add_argument("--disable-gpu")
-        options.add_argument("--force-device-scale-factor=1")
-        options.add_argument("--disable-backgrounding-occluded-windows")
-        options.add_argument("--disable-extensions")
-        options.add_argument("--start-maximized")
-        options.add_argument("--ignore-certificate-errors")
-        options.add_argument("--allow-running-insecure-content")
-        options.add_argument("--log-level=3")
-        options.add_argument("--disable-blink-features=AutomationControlled")
+        options = get_chromeoptions()
         super().__init__(executable_path=executable_path, chrome_options=options)
 
     def quit(self):
@@ -39,10 +43,14 @@ class Browser(webdriver.Chrome):
 
 
 class BaseCralwer:
-    def __init__(self):
+    def __init__(self, use_grid=False):
         if platform in ["win32", "win64"]:
             raise PlatformNotSupported()
-        self._client = Browser()
+        if use_grid:
+            options = get_chromeoptions()
+            self._client = webdriver.Remote(options=options, desired_capabilities=options.to_capabilities())
+        else:
+            self._client = Browser()
 
     def wait_until(self, identifier: str, by: str = By.XPATH, timeout: int = 15) -> Optional[WebElement]:
         return WebDriverWait(self._client, timeout).until(EC.element_to_be_clickable((by, identifier)))
