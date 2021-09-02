@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "mileage-scrapers"
+version = "0.1.0"
+description = ""
+authors = ["Levan Begashvili <life.long.learner127@outlook.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+selenium = "^3.141.0"
+PyVirtualDisplay = "^2.2"
+
+[tool.poetry.dev-dependencies]
+flake9 = "^3.8.3"
+pre-commit = "^2.14.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+profile = "black"
+
+[tool.flake8]
+max-line-length = 119
+extend-ignore = "E203,"
+exclude = "*migrations*"
+
+[tool.black]
+line-length = 119
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
